@@ -15,7 +15,9 @@ export interface TicketPack {
   maxParticipants: number;
   currentParticipants: number;
   scheduledDate: string;
+  scheduledTime: string;
   discountPercent: number;
+  pricePerTicket: number;
   messages: ChatMessage[];
 }
 
@@ -25,6 +27,9 @@ export interface Lottery {
   title: string;
   description: string;
   drawDate: string;
+  drawTime: string;
+  closesAt: string;
   ticketCount: number;
+  maxTicketsPerPerson: number;
   isOpen: boolean;
 }

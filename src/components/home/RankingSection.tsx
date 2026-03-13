@@ -1,5 +1,5 @@
 import type { Play } from '@/types';
-import PlayCarousel from '@/components/play/PlayCarousel';
+import PlayRankingGrid from '@/components/play/PlayRankingGrid';
 
 interface RankingSectionProps {
   plays: Play[];
@@ -21,7 +21,7 @@ export default function RankingSection({ plays }: RankingSectionProps) {
         </h2>
         <div className="mt-1 w-16 h-0.5 bg-teatro-gold rounded-full" />
       </div>
-      <PlayCarousel plays={rankedPlays} />
+      <PlayRankingGrid plays={rankedPlays} />
     </section>
   );
 }

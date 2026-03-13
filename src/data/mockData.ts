@@ -1,4 +1,4 @@
-import type { Play, UserLevel, User, NewsArticle, Notification, Lottery, TicketPack, ChatbotNode, Banner, Collection } from '../types';
+import type { Play, UserLevel, User, NewsArticle, Notification, Lottery, TicketPack, ChatbotNode, Banner, Collection, PointAction } from '../types';
 
 export const mockPlays: Play[] = [
   {
@@ -26,6 +26,18 @@ export const mockPlays: Play[] = [
     tags: ['humor', 'porteño', 'amigos'],
     startDate: '2026-01-15',
     endDate: '2026-06-30',
+    theaterAddress: 'Av. Corrientes 857, CABA',
+    theaterLat: -34.6037,
+    theaterLng: -58.3816,
+    upcomingShows: [
+      { date: '2026-03-14', time: '21:00' },
+      { date: '2026-03-15', time: '21:00' },
+      { date: '2026-03-16', time: '20:00' },
+      { date: '2026-03-21', time: '21:00' },
+    ],
+    hasSpecialOffer: true,
+    specialOfferLabel: 'SAVE 25%',
+    specialOfferDescription: 'Pack grupal disponible con 25% de descuento.',
   },
   {
     id: 'play-02',
@@ -52,6 +64,14 @@ export const mockPlays: Play[] = [
     tags: ['inmigración', 'familia', 'histórico'],
     startDate: '2026-02-01',
     endDate: '2026-07-15',
+    theaterAddress: 'Av. Rivadavia 1499, CABA',
+    upcomingShows: [
+      { date: '2026-03-13', time: '20:30' },
+      { date: '2026-03-14', time: '20:30' },
+      { date: '2026-03-15', time: '20:30' },
+    ],
+    hasRushTickets: true,
+    rushPrice: 4500,
   },
   {
     id: 'play-03',
@@ -78,6 +98,23 @@ export const mockPlays: Play[] = [
     tags: ['tango', 'música', 'romance'],
     startDate: '2026-01-20',
     endDate: '2026-08-30',
+    theaterAddress: 'Av. de Mayo 1222, CABA',
+    theaterLat: -34.6089,
+    theaterLng: -58.3834,
+    upcomingShows: [
+      { date: '2026-03-14', time: '21:00' },
+      { date: '2026-03-15', time: '21:00' },
+      { date: '2026-03-16', time: '19:00' },
+      { date: '2026-03-21', time: '21:00' },
+      { date: '2026-03-22', time: '21:00' },
+    ],
+    hasRushTickets: true,
+    rushPrice: 5000,
+    hasLottery: true,
+    lotteryId: 'lottery-01',
+    hasSpecialOffer: true,
+    specialOfferLabel: 'SAVE 40%',
+    specialOfferDescription: 'Oferta exclusiva para suscriptores. Entradas desde $9.000.',
   },
   {
     id: 'play-04',
@@ -104,6 +141,12 @@ export const mockPlays: Play[] = [
     tags: ['magia', 'títeres', 'niños'],
     startDate: '2026-03-01',
     endDate: '2026-12-15',
+    theaterAddress: 'Av. Corrientes 1660, CABA',
+    upcomingShows: [
+      { date: '2026-03-15', time: '15:00' },
+      { date: '2026-03-15', time: '17:00' },
+      { date: '2026-03-16', time: '15:00' },
+    ],
   },
   {
     id: 'play-05',
@@ -130,6 +173,15 @@ export const mockPlays: Play[] = [
     tags: ['suspenso', 'misterio', 'psicológico'],
     startDate: '2026-02-15',
     endDate: '2026-06-30',
+    theaterAddress: 'Mario Bravo 960, CABA',
+    upcomingShows: [
+      { date: '2026-03-13', time: '21:00' },
+      { date: '2026-03-14', time: '21:00' },
+      { date: '2026-03-15', time: '22:00' },
+    ],
+    hasSpecialOffer: true,
+    specialOfferLabel: 'SAVE 20%',
+    specialOfferDescription: 'Pack grupal disponible con 20% de descuento.',
   },
   {
     id: 'play-06',
@@ -206,6 +258,16 @@ export const mockPlays: Play[] = [
     tags: ['rock', 'música', 'nacional'],
     startDate: '2026-03-01',
     endDate: '2026-09-15',
+    theaterAddress: 'Av. Corrientes 1343, CABA',
+    upcomingShows: [
+      { date: '2026-03-14', time: '21:00' },
+      { date: '2026-03-15', time: '21:00' },
+      { date: '2026-03-21', time: '21:00' },
+    ],
+    hasRushTickets: true,
+    rushPrice: 4000,
+    hasLottery: true,
+    lotteryId: 'lottery-02',
   },
   {
     id: 'play-09',
@@ -260,6 +322,17 @@ export const mockPlays: Play[] = [
     tags: ['shakespeare', 'adaptación', 'crudo'],
     startDate: '2026-03-05',
     endDate: '2026-06-15',
+    theaterAddress: 'Junín 1930, CABA',
+    upcomingShows: [
+      { date: '2026-03-14', time: '20:00' },
+      { date: '2026-03-15', time: '20:00' },
+      { date: '2026-03-16', time: '18:00' },
+    ],
+    hasLottery: true,
+    lotteryId: 'lottery-03',
+    hasSpecialOffer: true,
+    specialOfferLabel: 'SAVE 71%',
+    specialOfferDescription: 'Oferta especial por tiempo limitado. Entradas desde $2.600.',
   },
   {
     id: 'play-11',
@@ -544,10 +617,11 @@ export const mockCollections: Collection[] = [
 export const mockBanners: Banner[] = [
   {
     id: 'banner-01',
-    imageUrl: 'https://placehold.co/1200x400/8b2252/d4a853?text=Festival+Teatro+BA+2026',
-    altText: 'Festival de Teatro Buenos Aires 2026',
+    imageUrl: 'https://placehold.co/1200x400/8b2252/d4a853?text=Tango+de+Medianoche',
+    altText: 'Tango de Medianoche - El musical que revoluciona Buenos Aires',
     size: 'hero',
-    linkTo: '/news',
+    linkTo: '/play/play-03',
+    playId: 'play-03',
     position: 0,
   },
   {
@@ -599,8 +673,16 @@ export const mockCurrentUser: User = {
   seenPlayIds: ['play-01', 'play-03', 'play-09'],
   onboardingCompleted: false,
   quizAnswers: [],
+  quizFavoritePlayIds: [],
   joinedPackIds: [],
   lotterySignups: [],
+  bio: 'Amante del teatro porteño. Siempre buscando la próxima obra que me vuele la cabeza.',
+  age: 28,
+  neighborhood: 'Palermo',
+  favoriteGenres: ['musical', 'drama', 'suspenso'],
+  theaterFrequency: '2-3 veces por mes',
+  companions: 'Con amigos',
+  instagram: '@martin.teatrero',
 };
 
 export const mockNews: NewsArticle[] = [
@@ -747,7 +829,10 @@ export const mockLotteries: Lottery[] = [
     title: 'Sorteo Tango de Medianoche',
     description: '2 entradas dobles para la función del sábado 15 de marzo.',
     drawDate: '2026-03-14',
+    drawTime: '18:00',
+    closesAt: '2026-03-14T17:00:00',
     ticketCount: 2,
+    maxTicketsPerPerson: 2,
     isOpen: true,
   },
   {
@@ -756,7 +841,10 @@ export const mockLotteries: Lottery[] = [
     title: 'Sorteo Buenos Aires Rock Opera',
     description: '3 entradas simples para la función del viernes 21 de marzo.',
     drawDate: '2026-03-20',
+    drawTime: '19:00',
+    closesAt: '2026-03-20T18:00:00',
     ticketCount: 3,
+    maxTicketsPerPerson: 1,
     isOpen: true,
   },
   {
@@ -765,7 +853,10 @@ export const mockLotteries: Lottery[] = [
     title: 'Sorteo Hamlet Porteño',
     description: '2 entradas dobles para la función del domingo 23 de marzo.',
     drawDate: '2026-03-22',
+    drawTime: '16:00',
+    closesAt: '2026-03-22T15:00:00',
     ticketCount: 2,
+    maxTicketsPerPerson: 2,
     isOpen: true,
   },
 ];
@@ -779,7 +870,9 @@ export const mockTicketPacks: TicketPack[] = [
     maxParticipants: 8,
     currentParticipants: 5,
     scheduledDate: '2026-03-14',
+    scheduledTime: '21:00',
     discountPercent: 25,
+    pricePerTicket: 9000,
     messages: [
       {
         id: 'msg-01-01',
@@ -839,7 +932,9 @@ export const mockTicketPacks: TicketPack[] = [
     maxParticipants: 6,
     currentParticipants: 3,
     scheduledDate: '2026-03-15',
+    scheduledTime: '22:00',
     discountPercent: 20,
+    pricePerTicket: 4000,
     messages: [
       {
         id: 'msg-02-01',
@@ -891,7 +986,9 @@ export const mockTicketPacks: TicketPack[] = [
     maxParticipants: 10,
     currentParticipants: 7,
     scheduledDate: '2026-03-16',
+    scheduledTime: '14:00',
     discountPercent: 30,
+    pricePerTicket: 3500,
     messages: [
       {
         id: 'msg-03-01',
@@ -1057,4 +1154,13 @@ export const mockChatbotNodes: ChatbotNode[] = [
       { label: 'Volver a empezar', value: 'restart', nextNodeId: 'greeting' },
     ],
   },
+];
+
+export const mockPointActions: PointAction[] = [
+  { id: 'pa-1', action: 'buy_ticket', label: 'Comprar entrada', points: 100, description: 'Comprar una entrada', icon: '🎟️' },
+  { id: 'pa-2', action: 'complete_quiz', label: 'Completar quiz', points: 50, description: 'Completar el quiz de gustos', icon: '✅' },
+  { id: 'pa-3', action: 'join_pack', label: 'Unirse a un pack', points: 20, description: 'Unirse a un pack grupal', icon: '👥' },
+  { id: 'pa-4', action: 'lottery_signup', label: 'Inscribirse a sorteo', points: 10, description: 'Inscribirse a un sorteo', icon: '🎲' },
+  { id: 'pa-5', action: 'add_favorite', label: 'Marcar favorita', points: 5, description: 'Marcar obra como favorita', icon: '❤️' },
+  { id: 'pa-6', action: 'chat_message', label: 'Mensaje en chat', points: 2, description: 'Enviar mensaje en chat grupal', icon: '💬' },
 ];

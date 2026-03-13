@@ -18,14 +18,14 @@ export function getRecommendations(
   );
 
   const scored = unseenPlays.map((play) => {
-    let score = play.rating;
+    let score = play.rating ?? 0;
     const genreBoost = preferredGenres.get(play.genre) || 0;
     score += genreBoost * 2;
     if (play.isFeatured) score += 0.5;
     return { play, score };
   });
 
-  scored.sort((a, b) => b.score - a.score);
+  scored.sort((a, b) => (b.score ?? 0) - (a.score ?? 0));
 
   return scored.slice(0, 6).map((s) => s.play);
 }

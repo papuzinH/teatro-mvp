@@ -25,6 +25,23 @@ export interface User {
   seenPlayIds: string[];
   onboardingCompleted: boolean;
   quizAnswers: string[];
+  quizFavoritePlayIds: string[];
   joinedPackIds: string[];
   lotterySignups: string[];
+  bio?: string;
+  age?: number;
+  neighborhood?: string;
+  favoriteGenres?: string[];
+  theaterFrequency?: string;
+  companions?: string;
+  instagram?: string;
+}
+
+export interface PointAction {
+  id: string;
+  action: string;
+  label: string;
+  points: number;
+  description: string;
+  icon: string;
 }

@@ -33,6 +33,11 @@ export interface PriceRange {
   max: number;
 }
 
+export interface UpcomingShow {
+  date: string;
+  time: string;
+}
+
 export interface Play {
   id: string;
   title: string;
@@ -48,10 +53,21 @@ export interface Play {
   schedules: Schedule[];
   theater: string;
   duration: number;
-  rating: number;
+  rating?: number;
   rankingPosition?: number;
   isFeatured: boolean;
   tags: string[];
   startDate: string;
   endDate: string;
+  upcomingShows?: UpcomingShow[];
+  hasRushTickets?: boolean;
+  rushPrice?: number;
+  hasLottery?: boolean;
+  lotteryId?: string;
+  hasSpecialOffer?: boolean;
+  specialOfferLabel?: string;
+  specialOfferDescription?: string;
+  theaterAddress?: string;
+  theaterLat?: number;
+  theaterLng?: number;
 }

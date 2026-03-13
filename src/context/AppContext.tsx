@@ -1,5 +1,5 @@
 import { createContext, useContext, useReducer, useEffect, type ReactNode } from 'react';
-import type { Play, User, NewsArticle, Notification, Lottery, TicketPack, Banner, Collection, UserLevel } from '../types';
+import type { Play, User, NewsArticle, Notification, Lottery, TicketPack, Banner, Collection, UserLevel, PointAction } from '../types';
 import {
   mockPlays,
   mockCurrentUser,
@@ -10,6 +10,7 @@ import {
   mockBanners,
   mockCollections,
   mockUserLevels,
+  mockPointActions,
 } from '../data/mockData';
 
 interface AppState {
@@ -22,6 +23,7 @@ interface AppState {
   lotteries: Lottery[];
   ticketPacks: TicketPack[];
   userLevels: UserLevel[];
+  pointActions: PointAction[];
 }
 
 type AppAction =
@@ -31,6 +33,7 @@ type AppAction =
   | { type: 'JOIN_PACK'; packId: string }
   | { type: 'COMPLETE_ONBOARDING'; selectedPlayIds: string[] }
   | { type: 'ADD_POINTS'; amount: number }
+  | { type: 'UPDATE_PROFILE'; data: Partial<User> }
   | { type: 'HYDRATE_USER'; user: Partial<User> };
 
 interface AppContextValue extends AppState {
@@ -41,6 +44,7 @@ interface AppContextValue extends AppState {
   joinPack: (packId: string) => void;
   completeOnboarding: (selectedPlayIds: string[]) => void;
   addPoints: (amount: number) => void;
+  updateProfile: (data: Partial<User>) => void;
 }
 
 function calculateLevel(points: number, levels: UserLevel[]): User['level'] {
@@ -59,9 +63,11 @@ function appReducer(state: AppState, action: AppAction): AppState {
       const favoritePlayIds = isFav
         ? state.currentUser.favoritePlayIds.filter((id) => id !== action.playId)
         : [...state.currentUser.favoritePlayIds, action.playId];
+      const points = isFav ? state.currentUser.points : state.currentUser.points + 5;
+      const level = calculateLevel(points, state.userLevels);
       return {
         ...state,
-        currentUser: { ...state.currentUser, favoritePlayIds },
+        currentUser: { ...state.currentUser, favoritePlayIds, points, level },
       };
     }
     case 'MARK_NOTIFICATION_READ': {
@@ -74,21 +80,29 @@ function appReducer(state: AppState, action: AppAction): AppState {
     }
     case 'SIGNUP_LOTTERY': {
       if (state.currentUser.lotterySignups.includes(action.lotteryId)) return state;
+      const newPoints = state.currentUser.points + 10;
+      const newLevel = calculateLevel(newPoints, state.userLevels);
       return {
         ...state,
         currentUser: {
           ...state.currentUser,
           lotterySignups: [...state.currentUser.lotterySignups, action.lotteryId],
+          points: newPoints,
+          level: newLevel,
         },
       };
     }
     case 'JOIN_PACK': {
       if (state.currentUser.joinedPackIds.includes(action.packId)) return state;
+      const newPoints = state.currentUser.points + 20;
+      const newLevel = calculateLevel(newPoints, state.userLevels);
       return {
         ...state,
         currentUser: {
           ...state.currentUser,
           joinedPackIds: [...state.currentUser.joinedPackIds, action.packId],
+          points: newPoints,
+          level: newLevel,
         },
         ticketPacks: state.ticketPacks.map((p) =>
           p.id === action.packId
@@ -98,15 +112,20 @@ function appReducer(state: AppState, action: AppAction): AppState {
       };
     }
     case 'COMPLETE_ONBOARDING': {
+      const newPoints = state.currentUser.points + 50;
+      const newLevel = calculateLevel(newPoints, state.userLevels);
       return {
         ...state,
         currentUser: {
           ...state.currentUser,
           onboardingCompleted: true,
           quizAnswers: action.selectedPlayIds,
+          quizFavoritePlayIds: action.selectedPlayIds,
           seenPlayIds: [
             ...new Set([...state.currentUser.seenPlayIds, ...action.selectedPlayIds]),
           ],
+          points: newPoints,
+          level: newLevel,
         },
       };
     }
@@ -120,6 +139,12 @@ function appReducer(state: AppState, action: AppAction): AppState {
           points: newPoints,
           level: newLevel,
         },
+      };
+    }
+    case 'UPDATE_PROFILE': {
+      return {
+        ...state,
+        currentUser: { ...state.currentUser, ...action.data },
       };
     }
     case 'HYDRATE_USER': {
@@ -154,8 +179,16 @@ function saveUserOverrides(user: User) {
       seenPlayIds: user.seenPlayIds,
       onboardingCompleted: user.onboardingCompleted,
       quizAnswers: user.quizAnswers,
+      quizFavoritePlayIds: user.quizFavoritePlayIds,
       joinedPackIds: user.joinedPackIds,
       lotterySignups: user.lotterySignups,
+      bio: user.bio,
+      age: user.age,
+      neighborhood: user.neighborhood,
+      favoriteGenres: user.favoriteGenres,
+      theaterFrequency: user.theaterFrequency,
+      companions: user.companions,
+      instagram: user.instagram,
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(toSave));
   } catch {
@@ -173,6 +206,7 @@ const initialState: AppState = {
   lotteries: mockLotteries,
   ticketPacks: mockTicketPacks,
   userLevels: mockUserLevels,
+  pointActions: mockPointActions,
 };
 
 const AppContext = createContext<AppContextValue | null>(null);
@@ -200,6 +234,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     completeOnboarding: (selectedPlayIds) =>
       dispatch({ type: 'COMPLETE_ONBOARDING', selectedPlayIds }),
     addPoints: (amount) => dispatch({ type: 'ADD_POINTS', amount }),
+    updateProfile: (data) => dispatch({ type: 'UPDATE_PROFILE', data }),
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

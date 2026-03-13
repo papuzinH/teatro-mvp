@@ -22,7 +22,7 @@ export default function TicketPackList({ packs, plays, joinedPackIds, onJoin, on
             pack={pack}
             play={play}
             isJoined={isJoined}
-            onJoin={onJoin}
+            onJoin={() => onJoin(pack.id)}
             onOpenChat={onOpenChat}
           />
         );

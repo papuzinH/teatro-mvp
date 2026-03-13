@@ -7,4 +7,5 @@ export interface Banner {
   size: BannerSize;
   linkTo?: string;
   position: number;
+  playId?: string;
 }

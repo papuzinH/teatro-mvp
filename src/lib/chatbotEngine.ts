@@ -83,5 +83,5 @@ export function filterPlays(filters: ChatbotFilters, plays: Play[]): Play[] {
     result = result.filter((play) => play.targetAudience === filters.targetAudience);
   }
 
-  return result.sort((a, b) => b.rating - a.rating).slice(0, 5);
+  return result.sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0)).slice(0, 5);
 }

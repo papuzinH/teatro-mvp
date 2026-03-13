@@ -1,17 +1,26 @@
+import { useState } from 'react';
 import { useApp } from '@/context/AppContext';
 import { getRecommendations } from '@/lib/recommendations';
 import SubscriptionCard from '@/components/profile/SubscriptionCard';
 import LevelProgress from '@/components/profile/LevelProgress';
 import FavoritesGrid from '@/components/profile/FavoritesGrid';
 import RecommendationsGrid from '@/components/profile/RecommendationsGrid';
+import ProfileDetails from '@/components/profile/ProfileDetails';
+import EditProfileModal from '@/components/profile/EditProfileModal';
+import PointsExplainer from '@/components/profile/PointsExplainer';
 
 export default function ProfilePage() {
-  const { currentUser, plays, userLevels } = useApp();
+  const { currentUser, plays, userLevels, pointActions, updateProfile } = useApp();
+  const [showEditModal, setShowEditModal] = useState(false);
 
   const recommendations = getRecommendations(plays, currentUser.seenPlayIds, currentUser.quizAnswers);
 
+  // Split favorites: quiz-based vs manually added
+  const quizFavIds = currentUser.quizFavoritePlayIds ?? [];
+  const manualFavIds = currentUser.favoritePlayIds.filter((id) => !quizFavIds.includes(id));
+
   return (
-    <div className="p-4 space-y-6">
+    <div className="p-4 space-y-6 pb-8">
       <h1 className="font-display text-2xl font-bold text-teatro-text-primary">
         Mi Perfil
       </h1>
@@ -39,17 +48,38 @@ export default function ProfilePage() {
         </div>
       </div>
 
+      {/* Profile details (dating-app style) */}
+      <ProfileDetails user={currentUser} onEdit={() => setShowEditModal(true)} />
+
       <SubscriptionCard subscription={currentUser.subscription} />
 
       <LevelProgress points={currentUser.points} level={currentUser.level} userLevels={userLevels} />
 
-      {/* Favorites Section */}
+      {/* Points Explainer */}
+      <PointsExplainer pointActions={pointActions} currentPoints={currentUser.points} />
+
+      {/* Manual Favorites Section */}
       <section className="space-y-3">
         <h2 className="font-display text-xl font-semibold text-teatro-text-primary">
           Mis favoritas
         </h2>
-        <FavoritesGrid favoritePlayIds={currentUser.favoritePlayIds} plays={plays} />
+        <FavoritesGrid favoritePlayIds={manualFavIds} plays={plays} />
       </section>
+
+      {/* Quiz Favorites Section */}
+      {quizFavIds.length > 0 && (
+        <section className="space-y-3">
+          <div>
+            <h2 className="font-display text-xl font-semibold text-teatro-text-primary">
+              Mis gustos del quiz
+            </h2>
+            <p className="font-body text-xs text-teatro-text-muted mt-0.5">
+              Obras seleccionadas durante el onboarding
+            </p>
+          </div>
+          <FavoritesGrid favoritePlayIds={quizFavIds} plays={plays} />
+        </section>
+      )}
 
       {/* Recommendations Section */}
       <section className="space-y-3">
@@ -58,6 +88,15 @@ export default function ProfilePage() {
         </h2>
         <RecommendationsGrid plays={recommendations} />
       </section>
+
+      {/* Edit Profile Modal */}
+      {showEditModal && (
+        <EditProfileModal
+          user={currentUser}
+          onSave={updateProfile}
+          onClose={() => setShowEditModal(false)}
+        />
+      )}
     </div>
   );
 }
