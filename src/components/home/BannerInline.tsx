@@ -9,7 +9,7 @@ export default function BannerInline({ banner }: BannerInlineProps) {
   const heightClass = banner.size === 'inline-small' ? 'h-16' : 'h-28';
 
   const content = (
-    <div className={`w-full ${heightClass} rounded-xl overflow-hidden`}>
+    <div className={`w-full ${heightClass} rounded-xl overflow-hidden my-4`}>
       <img
         src={banner.imageUrl}
         alt={banner.altText}
@@ -19,7 +19,7 @@ export default function BannerInline({ banner }: BannerInlineProps) {
   );
 
   if (banner.linkTo) {
-    return <Link to={banner.linkTo}>{content}</Link>;
+    return <Link  to={banner.linkTo}>{content}</Link>;
   }
 
   return content;

@@ -18,6 +18,27 @@ export default function EphemeralChatPage() {
     );
   }
 
+  const isMember = currentUser.joinedPackIds.includes(pack.id);
+
+  if (!isMember) {
+    return (
+      <div className="p-4 space-y-6">
+        <EmptyState
+          icon="🔒"
+          title="Acceso restringido"
+          message="Uníte al pack para acceder al chat del grupo."
+        />
+        <button
+          type="button"
+          onClick={() => navigate('/discounts')}
+          className="w-full px-4 py-3 rounded-xl bg-teatro-gold text-teatro-bg font-body font-bold text-sm hover:bg-teatro-gold/90 transition-colors"
+        >
+          Ver packs disponibles
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div className="p-4 space-y-6">
       <div className="flex items-center gap-2">

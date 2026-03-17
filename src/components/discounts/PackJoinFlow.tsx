@@ -7,11 +7,12 @@ interface PackJoinFlowProps {
   play?: Play;
   onConfirm: (packId: string) => void;
   onClose: () => void;
+  onOpenChat: (packId: string) => void;
 }
 
 type Step = 'commitment' | 'tickets' | 'confirm' | 'welcome';
 
-export default function PackJoinFlow({ pack, play, onConfirm, onClose }: PackJoinFlowProps) {
+export default function PackJoinFlow({ pack, play, onConfirm, onClose, onOpenChat }: PackJoinFlowProps) {
   const [step, setStep] = useState<Step>('commitment');
   const [ticketCount, setTicketCount] = useState(1);
 
@@ -35,7 +36,10 @@ export default function PackJoinFlow({ pack, play, onConfirm, onClose }: PackJoi
           </p>
           <button
             type="button"
-            onClick={onClose}
+            onClick={() => {
+              onClose();
+              onOpenChat(pack.id);
+            }}
             className="w-full px-4 py-3 rounded-xl bg-teatro-gold text-teatro-bg font-body font-bold text-sm hover:bg-teatro-gold/90 transition-colors"
           >
             Ir al chat del grupo

@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useRef, useEffect } from 'react';
 import { useApp } from '@/context/AppContext';
 import HeroBanner from './HeroBanner';
 import RankingSection from './RankingSection';
@@ -12,6 +12,18 @@ export default function HomeFeed() {
   const { plays, collections, banners } = useApp();
   const [searchQuery, setSearchQuery] = useState('');
   const [filters, setFilters] = useState<Filters>({});
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const searchContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (searchContainerRef.current && !searchContainerRef.current.contains(e.target as Node)) {
+        setIsSearchOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const heroBanner = banners.find((b) => b.size === 'hero');
   const heroBannerPlay = heroBanner?.playId
@@ -43,9 +55,18 @@ export default function HomeFeed() {
   return (
     <div className="space-y-6 p-4">
       {/* Search + Filters */}
-      <div className="space-y-3">
+      {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
+      <div
+        ref={searchContainerRef}
+        className="relative"
+        onFocus={() => setIsSearchOpen(true)}
+      >
         <SearchBar value={searchQuery} onChange={setSearchQuery} />
-        <FilterBar filters={filters} onFiltersChange={setFilters} />
+        {isSearchOpen && (
+          <div className="absolute top-full left-0 right-0 mt-1 z-50 bg-teatro-surface border border-teatro-surface-light rounded-xl p-3 shadow-lg">
+            <FilterBar filters={filters} onFiltersChange={setFilters} />
+          </div>
+        )}
       </div>
 
       {isFiltering ? (

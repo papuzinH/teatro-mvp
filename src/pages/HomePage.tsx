@@ -10,7 +10,7 @@ export default function HomePage() {
   );
 
   return (
-    <div className="p-4 space-y-6">
+    <div className="py-4 px-2 space-y-6">
       {showOnboarding && (
         <OnboardingModal isOpen={showOnboarding} onClose={() => setShowOnboarding(false)} />
       )}

@@ -78,7 +78,7 @@ export default function DiscountsPage() {
                 play={play}
                 isJoined={isJoined}
                 onJoin={() => setPackModal(pack)}
-                onOpenChat={(packId) => navigate(`/discounts/chat/${packId}`)}
+                onOpenChat={(packId) => navigate(`/discounts/pack/${packId}/chat`)}
               />
             );
           })}
@@ -102,6 +102,7 @@ export default function DiscountsPage() {
           play={plays.find((p) => p.id === packModal.playId)}
           onConfirm={handlePackConfirm}
           onClose={() => setPackModal(null)}
+          onOpenChat={(packId) => navigate(`/discounts/pack/${packId}/chat`)}
         />
       )}
     </div>
